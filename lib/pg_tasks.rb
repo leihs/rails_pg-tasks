@@ -116,7 +116,7 @@ module ActiveRecord
       def structure_and_data_restore(filename)
         set_psql_env
         command = 'pg_restore --disable-triggers --exit-on-error ' \
-          '--single-transaction -x -O -d ' \
+          '--single-transaction -x -O -d -c' \
           "#{Shellwords.escape(configuration['database'])} " \
           "#{Shellwords.escape(filename.to_s)}"
         unless Kernel.system(command)
