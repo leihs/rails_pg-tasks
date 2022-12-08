@@ -169,7 +169,7 @@ module ActiveRecord
           .new(hash_config)
           .send(task_name, filename)
       rescue ActiveRecord::NoDatabaseError
-        $stderr.puts "Database '#{configuration_hash[:database]}' does not exist"
+        $stderr.puts "Database '#{hash_config.configuration_hash[:database]}' does not exist"
       rescue Exception => error
         $stderr.puts error, *(error.backtrace)
         raise error
@@ -179,7 +179,7 @@ module ActiveRecord
         configuration = arguments.first
         hash_config =
           ActiveRecord::DatabaseConfigurations::HashConfig.new("test", "primary", configuration)
-        class_for_adapter(configuration_hash[:adapter]).new(hash_config).send :terminate_connections
+        class_for_adapter(hash_config.configuration_hash[:adapter]).new(hash_config).send :terminate_connections
       end
     end
   end
