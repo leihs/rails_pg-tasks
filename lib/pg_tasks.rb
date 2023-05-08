@@ -53,7 +53,7 @@ module PgTasks
     private
 
     def current_config
-      ActiveRecord::Tasks::DatabaseTasks.current_config
+      Rails.configuration.database_configuration["pg"].deep_symbolize_keys
     end
 
     def filename_or_default(filename, default)
