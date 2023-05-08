@@ -53,7 +53,11 @@ module PgTasks
     private
 
     def current_config
-      ActiveRecord::Tasks::DatabaseTasks.current_config
+      configuration_hash = ActiveRecord::Base.connection_db_config.configuration_hash
+      if configuration_hash.nil?
+        throw "PG Tasks: ActiveRecord::Base.connection_db_config.configuration_hash is nil"
+      end
+      configuration_hash
     end
 
     def filename_or_default(filename, default)
@@ -156,6 +160,16 @@ module ActiveRecord
           $stdout.puts "Connections to '#{database}' have been terminated."
         end
       end
+
+      private
+
+      def set_psql_env
+        ENV["PGHOST"]     = db_config.host                     if db_config.host
+        ENV["PGPORT"]     = configuration_hash[:port].to_s     if configuration_hash[:port]
+        ENV["PGPASSWORD"] = configuration_hash[:password].to_s if configuration_hash[:password]
+        ENV["PGUSER"]     = configuration_hash[:username].to_s if configuration_hash[:username]
+      end
+
     end
   end
 end
